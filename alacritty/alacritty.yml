@@ -31,13 +31,15 @@ colors:
 font:
   normal:
     family: "Hack NFM"
-    style: Normal
+    style: Regular
 
   bold:
     family: "Hack NFM"
+    style: Bold
 
   italic:
     family: "Hack NFM"
+    style: Italic
 
   size: 10
 
