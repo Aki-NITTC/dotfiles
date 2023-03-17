@@ -2,6 +2,9 @@ window:
   opacity: 0.8
   title: "My Basement"
 
+shell:
+  program: /usr/bin/nu
+
 # tokyo night
 colors:
   primary:
@@ -30,18 +33,18 @@ colors:
 
 font:
   normal:
-    family: "Hack NFM"
+    family: "RobotoMono Nerd Font Mono"
     style: Regular
 
   bold:
-    family: "Hack NFM"
+    family: "RobotoMono Nerd Font Mono"
     style: Bold
 
   italic:
-    family: "Hack NFM"
+    family: "RobotoMono Nerd Font Mono"
     style: Italic
 
-  size: 10
+  size: 8
 
 cursor:
   style: "Beam"

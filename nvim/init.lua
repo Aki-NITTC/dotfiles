@@ -9,7 +9,6 @@ vim.opt.updatetime = 300
 vim.opt.signcolumn = 'yes'
 vim.opt.guicursor = 'n-v-c-i:ver15-blinkon450-blinkoff150'
 
-vim.api.nvim_exec ( 'language en_US', true )
 vim.api.nvim_exec ( 'syntax enable', true )
 vim.api.nvim_exec ( 'set number', true )
 vim.api.nvim_exec ( 'set autoindent smartindent', true )
@@ -19,6 +18,7 @@ vim.api.nvim_exec ( 'set tabstop=4', true )
 vim.api.nvim_exec ( 'set shiftwidth=4', true )
 vim.api.nvim_exec ( 'set expandtab', true )
 vim.api.nvim_exec ( 'set makeprg=mingw32-make', true )
+vim.api.nvim_exec ( 'set nowrap', true )
 
 -- ////////////////////////////////////////////////////////////
 
