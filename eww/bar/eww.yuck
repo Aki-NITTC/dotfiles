@@ -1,0 +1,289 @@
+;; Launcher Widgets ========================
+(defwidget widget_launcher[]
+    (box
+        :orientation "v"
+        :space-evenely "false"
+        :spacing "-15"
+        (button
+            :class "icon_launcher"
+            :onclick "" ""
+            )
+        )
+    )
+
+;; Workspaces Widgets ========================
+(deflisten workspace
+    ""
+    )
+
+(defwidget widget_workspaces []
+    (literal
+        :content workspace
+        )
+    )
+
+;; Launcher-Workspaces wrapper ========================
+(defwidget wrapper_top []
+    (box
+        :orientation "v"
+        :space-evenly "false"
+        :valign "start"
+        (widget_launcher)
+        (widget_workspaces)
+        )
+    )
+
+;; Battery Widgets ========================
+(defpoll icon_battery
+    :interval "10s" ""
+    )
+
+(defpoll info_battery
+    :interval "10s" ""
+    )
+
+(defwidget widget_battery []
+    (box
+        :orientation "v"
+        :space-evenly "false"
+        (label
+            :class "widget_battery"
+            :halign "end"
+            :text icon_battery
+            :tooltip "Battery: ${info_battery}%"
+            )
+        )
+    )
+
+;; Wifi Widgets ========================
+(defpoll icon_wifi
+    :interval "10s" ""
+    )
+
+(defpoll info_wifi
+    :interval "10s" ""
+    )
+
+(defwidget widget_wifi []
+    (box
+        :orientation "v"
+        :tooltip info_wifi
+        (button
+            :class "icon_wifi" icon_wifi
+            :onclick ""
+            )
+        )
+    )
+
+;; Backlight Widgets ========================
+
+
+;; Volume Widgets ========================
+(defvar volume
+    false
+    )
+
+(defpoll current_volume
+    :interval "1s" ""
+    )
+
+(defwidget widget_volume []
+    (eventbox
+        :onhover ""
+        :onhoverlost ""
+        (box
+            :orientation "v"
+            :space-evenly "false"
+            :spacing "2"
+            (revealer
+                :transition "slideup"
+                :reveal volume
+                :duration "550ms"
+                (scale
+                    :class "bar_volume"
+                    :orientation "v"
+                    :value current_volume
+                    :flipped "true"
+                    :tooltip "Volume: ${current_volume}%"
+                    :max "101"
+                    :min "0"
+                    :onchange ""
+                    )
+                )
+            (button
+                :class "icon_volume" ""
+                :onclick ""
+                )
+            )
+        )
+    )
+
+
+;; Control Panel Widgets ========================
+(defwidget widget_control []
+    (box
+        :class "widget-control"
+        :orientation "v"
+        :space-evenly false
+        (widget_battery)
+        (widget_wifi)
+        (widget_volume)
+        )
+    )
+
+;; Clock Widgets ========================
+(defpoll hour
+    :interval "1s" "date '+%H'"
+    )
+
+(defpoll minute
+    :interval "1s" "date '+%M'"
+    )
+
+(defwidget widget_clock []
+    (box
+        :class "widget-clock"
+        :orientation "v"
+        :valign "end"
+        (button
+            :class "clock-hour" hour
+            :onclick ""
+            )
+        (button
+            :class "time-minute" minute
+            :onclick ""
+            )
+        )
+    )
+
+;; Calender Widgets ========================
+(defpoll cal_day
+    :interval "10h" "date '+%d'"
+    )
+
+(defpoll cal_month
+    :interval "10h" ""
+    )
+
+(defpoll cal_year
+    :interval "10h" "date '+%Y'"
+    )
+
+(defwidget widget_calendar []
+    (box
+        :class "widget-calender"
+        :orientation "v"
+        (box
+            :class "calender-inner"
+            (calender
+                :class "calendar"
+                :day cal_day
+                :month cal_month
+                :year cal_year
+                )
+            )
+        )
+    )
+
+;; Powermenu Widgets ========================
+(defvar power
+    false
+    )
+
+(defwidget widget_power []
+    (eventbox
+        :onhover ""
+        :onhoverlost ""
+        (box
+            :class "powermenu"
+            :orientation "v"
+            :space-evenly "false"
+            :vexpand "false"
+            (revealer
+                :transition "slideup"
+                :reveal power
+                :duration "550ms"
+                (box
+                    :orientation "v"
+                    :space-evenly "false"
+                    (button
+                        :class "button-restart-hypr"
+                        :tooltip "Hyprland Restart"
+                        :onclick "" ""
+                        )
+                    (button
+                        :class "button-reboot"
+                        :tooltip "Reboot Now"
+                        :onclick "sudo reboot now" ""
+                        )
+                    (button
+                        :class "button-logout"
+                        :tooltip "Logout Hyprland"
+                        :onclick "" ""
+                        )
+                    (button
+                        :class "button-lock"
+                        :tooltip "Lock Screen"
+                        :onclick "" ""
+                        )
+                    )
+                )
+            (button
+                :class "button-shutdown"
+                :tooltip "Shutdown"
+                :onclick "sudo shutdown now" ""
+                )
+            )
+        )
+    )
+
+;; Bottom Section ========================
+(defwidget bottom []
+    (box
+        :orientation "v"
+        :space-evenly "false"
+        (widget_clock)
+        (widget_power)
+        )
+    )
+
+;; Control-Bottom Wrapper ========================
+(defwidget wrapper_bottom []
+    (box
+        :orientation "v"
+        :space-evenly "false"
+        :valign "end"
+        :spacing "5"
+        (control)
+        (bottom)
+        )
+    )
+
+;; Bar ========================
+(defwidget bar []
+    (box
+        :class "bar"
+        :orientation "v"
+        :vexpand "false"
+        :hexpand "false"
+        (wrapper_top)
+        (wrapper_bottom)
+        )
+    )
+
+;; Window ========================
+(defwindow bar
+    :monitor 0
+    :reserve (struts :distance "35px" :side "right")
+    :geometry (geometry :x "0" :y "0" :height "100%" :width "47px")
+    :wm-ignore "false"
+    :hexpand "false"
+    :vexpand "false"
+    (bar)
+    )
+
+(defwindow calendar
+    :geometry (geometry :x "70px" :y "65%" :width "270px" :height "60px"
+    (widget_calendar)
+    )
+

@@ -1,0 +1,269 @@
+(deflisten BACKLIGHT
+    `bash ../scripts/backlight.sh --get`
+    )
+
+(deflisten BATTERY
+    `bash ../scripts/battery.sh --get-percentage`
+    )
+
+(deflisten BATTERYICON
+    `bash ../scripts/battery.sh --get-icon`
+    )
+
+(deflisten VOLUME
+    `bash ../scripts/audio.sh --get`
+    )
+
+(deflisten VOLUMEICON
+    `bash ../scripts/audio.sh --get-icon`
+    )
+
+(deflisten MIC
+    `bash ../scripts/audio.sh --get`
+    )
+
+(deflisten MICICON
+    `bash ../scripts/audio.sh --get-icon`
+    )
+
+(deflisten NETWORK
+    `bash ../scripts/network.sh --get-status`
+    )
+
+(defpoll day
+    :interval "20h"
+    "date '+%d'"
+    )
+
+(defpoll year
+    :interval "20h"
+    "date '+%Y'"
+    )
+
+(defwidget sys_sliders []
+    (box
+        :class "generic"
+        :vexpand "false"
+        :hexpand "false"
+        :width 325
+        (box
+            :class "slidersbox"
+            :orientation "v"
+            :spacing 10
+            :halign "center"
+            :valign "center"
+            :space-evenly "false"
+            :vexpand "false"
+            :hexpand "false"
+            (box 
+                :class "volume_bar"
+                :orientation "h"
+                :spacing 20
+                :space-evenly "false"
+                :vexpand "false"
+                :hexpand "false"
+                (button
+                    :width 30
+                    :onclick "bash ../scripts/audio.sh --toggle" 
+                    (label
+                        :class "icon_volume"
+                        :text VOLUMEICON
+                        )
+                    )
+                (scale 
+                    :min 0
+                    :max 100
+                    :value VOLUME
+                    :active "true"
+                    :onchange "bash ../scripts/audio.sh --set {}"
+                    )
+                )
+            (box
+                :class "mic_bar"
+                :orientation "h"
+                :spacing 20
+                :space-evenly "false"
+                :vexpand "false"
+                :hexpand "false"
+                (button
+                    :width 30
+                    :onclick "bash ../scripts/mic.sh --toggle" 
+                    (label
+                        :class "icon_mic"
+                        :text MICICON
+                        )
+                    )
+                (scale 
+                    :min 0 
+                    :max 100 
+                    :value MIC 
+                    :active "true" 
+                    :onchange "bash ../scripts/mic.sh --set {}"
+                    )
+                )
+            (box 
+                :class "bright_bar" 
+                :orientation "h" 
+                :spacing 20 
+                :space-evenly "false" 
+                :vexpand "false" 
+                :hexpand "false"
+                (button 
+                    :width 30 
+                    :onclick "" 
+                    (label 
+                        :width 30 
+                        :class "icon_bright" 
+                        :text ""
+                        )
+                    )
+                (scale
+                    :min 0
+                    :max 255
+                    :value BACKLIGHT 
+                    :active "true"
+                    :onchange "bash ../scripts/backlight.sh --set {}"
+                    )
+                )
+            )
+        )
+    )
+
+;; Battery ================================
+(defwidget battery []
+    (box 
+        :class "generic" 
+        :vexpand "false" 
+        :hexpand "false" 
+        :width 65
+        (box 
+            :class "battery"
+            :orientation "v"
+            :spacing 20
+            :space-evenly "false"
+            :vexpand "false"
+            :hexpand "false"
+            (label
+                :class "icon_battery"
+                :text BATTERYICON
+                )
+            (label
+                :text BATTERY
+                )
+            )
+        )
+    )
+
+;; Network ================================
+(defwidget network []
+    (box 
+        :class "generic" 
+        :vexpand "false" 
+        :hexpand "true" 
+        :orientation "h" 
+        :width 200
+        (button 
+            :class "btn_network" 
+            :onclick "bash ../scripts/network.sh --toggle" 
+            :onmiddleclick ""
+            (label 
+                :class "network" 
+                :text NETWORK
+                )
+            )
+        )
+    )
+
+;; Bluetooth ================================
+(defwidget bluetooth []
+    (box
+        :class "generic" 
+        :vexpand "false" 
+        :hexpand "false" 
+        :width 60
+	    (button 
+            :class "btn_bluetooth" 
+            :onclick ""
+            (label 
+                :text "")
+            )
+        )
+    )
+
+;; Power Button ================================
+(defwidget powerbutton []
+    (box
+        :class "generic" 
+        :vexpand "false" 
+        :hexpand "false" 
+        :width 60
+        (button 
+            :class "btn_poweroff" 
+            :onclick "bash ../scripts/powermenu.sh" 
+            ""
+            )
+        )
+    )
+
+;; Widgets ================================
+(defwidget system []
+    (box
+        :space-evenly "false" 
+        :orientation "v" 
+        :spacing 10 
+        :width 400
+        (box 
+            :class "row" 
+            :orientation "h" 
+            :space-evenly "false" 
+            :spacing 10 
+            :height 60
+            (network)
+            (bluetooth)
+            (powerbutton)
+            )
+        (box 
+            :class "row" 
+            :orientation "h" 
+            :space-evenly "false" 
+            :spacing 10 
+            :height 60
+            (battery)
+            (sys_sliders)
+            )
+        )
+    )
+
+(defwidget cal []
+    (box 
+    :class "generic" 
+    :orientation "v"
+        (calendar 
+            :class "cal" 
+            :day day 
+            :year year
+            )
+        )
+    )
+
+;; Dashboard ================================
+(defwidget dashboard []
+    (box
+        :class "background"
+        :space-evenly "false"
+        :orientation "v" 
+        :spacing 15
+        :width 400
+        (system)
+        (calendar)
+        )
+    )
+
+;; Window ================================
+(defwindow dashboard
+    :stacking "fg"
+    :focusable "false"
+    :monitor 0
+    :geometry (geometry :anchor "top right" :x 5 :y 5 )
+    (dashboard)
+    )
